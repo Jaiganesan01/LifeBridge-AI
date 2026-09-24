@@ -26,8 +26,13 @@ export default function App() {
   const [soundMuted, setSoundMuted] = useState(false);
   const [isDemoOpen, setIsDemoOpen] = useState(false);
 
-  // WebSocket connection to backend
-  const { isConnected, lastEvent, secondsAgo } = useWebSocket('ws://localhost:8000/ws');
+  // Dynamic WebSocket connection to backend
+  const wsUrl = import.meta.env.VITE_WS_URL || 
+    (import.meta.env.VITE_API_URL 
+      ? import.meta.env.VITE_API_URL.replace(/^http/, 'ws') + '/ws' 
+      : 'ws://localhost:8000/ws');
+  const { isConnected, lastEvent, secondsAgo } = useWebSocket(wsUrl);
+
 
   // Load hospitals on mount
   useEffect(() => {
